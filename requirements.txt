@@ -1,0 +1,9 @@
+# Dependencies
+
+paho-mqtt>=1.6.1
+influxdb-client>=1.36.0
+pyyaml>=6.0
+dataclasses-json>=0.5.7
+python-dateutil>=2.8.2
+asyncio-mqtt>=0.16.1
+typing-extensions>=4.5.0

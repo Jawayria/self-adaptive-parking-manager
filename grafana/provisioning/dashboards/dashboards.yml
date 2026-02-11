@@ -1,0 +1,16 @@
+# Grafana Dashboard Provisioning
+# Auto-loads dashboards from file
+
+apiVersion: 1
+
+providers:
+  - name: 'Parking Dashboards'
+    orgId: 1
+    folder: 'Smart Parking'
+    folderUid: 'smart-parking'
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 30
+    allowUiUpdates: true
+    options:
+      path: /var/lib/grafana/dashboards

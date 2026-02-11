@@ -1,0 +1,22 @@
+# Grafana Data Source Provisioning
+# Auto-configures InfluxDB connection
+
+apiVersion: 1
+
+datasources:
+  - name: InfluxDB
+    uid: influxdb
+    type: influxdb
+    access: proxy
+    url: http://influxdb:8086
+    jsonData:
+      version: Flux
+      organization: parking-org
+      defaultBucket: parking_data
+      tlsSkipVerify: true
+    secureJsonData:
+      token: my-super-secret-token
+    isDefault: true
+    editable: true
+    # Don't validate connection on startup (InfluxDB might not be ready yet)
+    withCredentials: false

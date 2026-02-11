@@ -1,0 +1,19 @@
+# Python cache
+__pycache__/
+*.pyc
+
+# Virtual environment
+.venv/
+
+.idea/
+
+# Logs
+*.log
+
+# Docker runtime data
+mosquitto/data/*.db
+grafana/data/
+influxdb/data/
+
+# OS files
+.DS_Store

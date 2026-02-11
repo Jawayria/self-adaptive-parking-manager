@@ -1,0 +1,76 @@
+# Self-Adaptive Smart Parking Lot Manager Configuration
+
+# MQTT Configuration
+mqtt:
+  broker: "localhost"
+  port: 1883
+  topics:
+    sensor_data: "parking/lot/{lot_id}/sensors"
+    control_commands: "parking/lot/{lot_id}/control"
+    status: "parking/lot/{lot_id}/status"
+
+# InfluxDB Configuration
+influxdb:
+  url: "http://localhost:8086"
+  token: "my-super-secret-token"
+  org: "parking-org"
+  bucket: "parking_data"
+
+# Parking Lot Configuration
+parking_lots:
+  - id: "lot_1"
+    name: "Main Parking Lot"
+    total_capacity: 100
+    initial_occupancy: 30
+    base_price: 5.0
+    min_price: 2.0
+    max_price: 20.0
+
+  - id: "lot_2"
+    name: "Overflow Parking Lot"
+    total_capacity: 50
+    initial_occupancy: 10
+    base_price: 3.0
+    min_price: 1.0
+    max_price: 15.0
+
+# Simulation Parameters
+simulation:
+  tick_interval_seconds: 2  # Time between simulation ticks
+  base_arrival_rate: 0.5    # Base probability of car arrival per tick
+  base_departure_rate: 0.15 # Base probability of car departure per tick
+  traffic_variation: true   # Enable external traffic simulation
+  peak_hours: [8, 9, 12, 13, 17, 21, 22]  # Peak traffic hours
+
+# Adaptation Thresholds and Goals
+adaptation:
+  # Target utilization range
+  target_utilization_min: 0.70  # 70%
+  target_utilization_max: 0.95  # 95%
+  
+  # Price adjustment thresholds
+  high_occupancy_threshold: 0.90    # Increase price above 90%
+  low_occupancy_threshold: 0.50     # Decrease price below 50%
+  critical_occupancy_threshold: 0.98 # Critical level
+  
+  # Queue management
+  max_queue_length: 10
+  queue_warning_threshold: 5
+  
+  # Price adjustment amounts
+  price_increase_step: 1.0
+  price_decrease_step: 0.5
+  critical_price_multiplier: 1.5
+  
+  # Gate control
+  gate_close_queue_threshold: 8
+  gate_reopen_occupancy: 0.85
+  
+  # Redirection
+  redirect_on_full: true
+  redirect_occupancy_threshold: 0.98
+
+# Logging
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
