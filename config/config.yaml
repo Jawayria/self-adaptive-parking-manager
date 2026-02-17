@@ -20,7 +20,7 @@ influxdb:
 parking_lots:
   - id: "lot_1"
     name: "Main Parking Lot"
-    total_capacity: 100
+    total_capacity: 50
     initial_occupancy: 30
     base_price: 5.0
     min_price: 2.0
@@ -28,7 +28,7 @@ parking_lots:
 
   - id: "lot_2"
     name: "Overflow Parking Lot"
-    total_capacity: 50
+    total_capacity: 30
     initial_occupancy: 10
     base_price: 3.0
     min_price: 1.0
@@ -37,8 +37,8 @@ parking_lots:
 # Simulation Parameters
 simulation:
   tick_interval_seconds: 2  # Time between simulation ticks
-  base_arrival_rate: 0.5    # Base probability of car arrival per tick
-  base_departure_rate: 0.15 # Base probability of car departure per tick
+  base_arrival_rate: 0.85    # Base probability of car arrival per tick
+  base_departure_rate: 0.09 # Base probability of car departure per tick
   traffic_variation: true   # Enable external traffic simulation
   peak_hours: [8, 9, 12, 13, 17, 21, 22]  # Peak traffic hours
 
@@ -49,7 +49,7 @@ adaptation:
   target_utilization_max: 0.95  # 95%
   
   # Price adjustment thresholds
-  high_occupancy_threshold: 0.90    # Increase price above 90%
+  high_occupancy_threshold: 0.80   # Increase price above 80%
   low_occupancy_threshold: 0.50     # Decrease price below 50%
   critical_occupancy_threshold: 0.98 # Critical level
   
@@ -63,12 +63,9 @@ adaptation:
   critical_price_multiplier: 1.5
   
   # Gate control
-  gate_close_queue_threshold: 8
-  gate_reopen_occupancy: 0.85
-  
-  # Redirection
-  redirect_on_full: true
-  redirect_occupancy_threshold: 0.98
+  gate_close_occupancy_threshold: 0.80
+  gate_reopen_occupancy: 0.70
+
 
 # Logging
 logging:
