@@ -23,7 +23,6 @@ class AdaptationAction(Enum):
     DECREASE_PRICE = "decrease_price"
     CLOSE_GATE = "close_gate"
     OPEN_GATE = "open_gate"
-    REDIRECT_VEHICLES = "redirect_vehicles"
     NO_ACTION = "no_action"
 
 

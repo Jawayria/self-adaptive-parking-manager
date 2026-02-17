@@ -87,11 +87,6 @@ class KnowledgeBase:
     def store_adaptation_decision(self, decision: AdaptationDecision):
         """
         Store an adaptation decision made by the autonomic manager.
-
-        NOTE:
-        - This stores REDIRECTION as a recommendation event.
-        - If you want to show 'target_lot' in Grafana, you must provide it.
-          We try to read it from decision.current_state['target_lot'] if present.
         """
         try:
             actions_str = ",".join([a.value for a in decision.actions])
