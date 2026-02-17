@@ -64,7 +64,7 @@ class ParkingLotSimulator:
         self.queue_length = 0
         self.rejected_vehicles = 0
         self.total_revenue = 0.0
-        self.redirect_target: Optional[str] = None
+      
         
         # Simulation control
         self._running = False
@@ -127,9 +127,7 @@ class ParkingLotSimulator:
             self.gate_state = GateState.OPEN
             logger.info("Gate OPENED")
             
-        elif command.action == AdaptationAction.REDIRECT_VEHICLES:
-            self.redirect_target = command.parameters.get("target_lot")
-            logger.info(f"Vehicles being redirected to: {self.redirect_target}")
+       
     
     def _simulate_traffic_level(self) -> float:
         """
@@ -255,11 +253,6 @@ class ParkingLotSimulator:
                 self.current_occupancy += 1
                 self.total_revenue += self.current_price
             
-            # Natural queue decay (people give up)
-            if self.queue_length > 0 and random.random() < 0.1:
-                gave_up = random.randint(0, min(2, self.queue_length))
-                self.queue_length -= gave_up
-                self.rejected_vehicles += gave_up
         
         # Publish sensor data
         self._publish_sensor_data()
