@@ -4,7 +4,7 @@
 **Course:** Software Engineering for Autonomous Systems  
 **Team Members:** Jawayria Hashmi, Lameya Islam
 
-An autonomous parking management system that uses the **MAPE-K (Monitor-Analyze-Plan-Execute-Knowledge)** control loop to dynamically optimize parking operations. The system monitors parking lot conditions in real-time and autonomously adapts pricing, gate control, and vehicle redirection to maintain optimal utilization, minimize congestion, and maximize revenue.
+An autonomous parking management system that uses the **MAPE-K (Monitor-Analyze-Plan-Execute-Knowledge)** control loop to dynamically optimize parking operations. The system monitors parking lot conditions in real-time and autonomously adapts pricing, gate control to maintain optimal utilization, minimize congestion, and maximize revenue.
 
 
 ---
@@ -14,7 +14,6 @@ An autonomous parking management system that uses the **MAPE-K (Monitor-Analyze-
 - **Autonomous Operation** - Fully self-adaptive system with no manual intervention
 - **Dynamic Pricing** - Automatic price adjustments based on occupancy ($2-$20 range)
 - **Automated Gate Control** - Opens/closes gates to prevent queue overflow
-- **Vehicle Redirection** - Load balancing across multiple parking lots
 - **Real-time Dashboard** - Live monitoring with Grafana visualization
 - **MAPE-K Architecture** - Complete autonomic computing implementation
 - **Containerized Infrastructure** - Docker-based deployment (MQTT, InfluxDB, Grafana)
@@ -38,32 +37,35 @@ The system manages **2 parking lots** (Lot 1: 100 spaces, Lot 2: 50 spaces) usin
 ### 1. Start Infrastructure
 
 ```bash
-# Start Docker services (MQTT, InfluxDB, Grafana)
 docker-compose up -d
-
-# Verify containers are running
+```
+Verify all services are running: 
+```bash
 docker ps
 ```
 
-### 2. Install Python Dependencies
+### 2. Install Python Dependencies (Recommended)
 
 ```bash
-# Create and activate virtual environment (recommended)
 python -m venv .venv
-
-# Windows:
+```
+Activate the env (In Windows):
+```bash
 .venv\Scripts\activate
-# Linux/Mac:
+```
+(In Linux/Mac):
+```bash
 source .venv/bin/activate
+```
 
-# Install dependencies
+Install dependencies
+```bash
 pip install -r requirements.txt
 ```
 
 ### 3. Run the System
 
 ```bash
-# Run full MAPE-K implementation
 python main.py
 ```
 
@@ -97,13 +99,7 @@ INFO - Executed increase_price for lot_1
 ### 5. Stopping the System
 
 ```bash
-# Stop Python application
 Ctrl+C
-
-# Stop Docker containers
-docker-compose down
-
-# Remove all data (fresh start)
 docker-compose down -v
 ```
 
@@ -114,53 +110,30 @@ docker-compose down -v
 ```
 Autonomous_project/
 ├── config/
-│   └── config.yaml              # System configuration & thresholds
+│   └── config.yaml              
 ├── src/
-│   ├── models.py                # Data models (SensorData, ControlCommand)
-│   ├── mqtt_client.py           # MQTT communication wrapper
-│   ├── knowledge_base.py        # InfluxDB integration (Knowledge component)
-│   ├── parking_simulator.py     # Parking lot simulation
-│   └── autonomic_manager.py     # MAPE-K loop implementation
+│   ├── models.py                
+│   ├── mqtt_client.py           
+│   ├── knowledge_base.py        
+│   ├── parking_simulator.py     
+│   └── autonomic_manager.py     
 ├── grafana/
-│   ├── provisioning/            # Auto-configured datasources
+│   ├── provisioning/            
 │   └── dashboards/
-│       └── parking_dashboard.json  # Pre-built dashboard
-├── docker-compose.yml           # Infrastructure setup
-├── requirements.txt             # Python dependencies
-├── main.py                      # Main entry point
-└── README.md                    # This file
+│       └── parking_dashboard.json  
+├── docker-compose.yml           
+├── requirements.txt             
+├── main.py                      
+└── README.md                    
 ```
 
 ---
 
 ## Configuration
 
-Edit [config/config.yaml](config/config.yaml) to customize behavior:
+Edit [config/config.yaml](config/config.yaml) to customize parameters.
 
-```yaml
-# Parking lot settings
-parking_lots:
-  - id: "lot_1"
-    total_capacity: 100
-    base_price: 5.0
-    min_price: 2.0
-    max_price: 20.0
 
-# Simulation parameters  
-simulation:
-  base_arrival_rate: 0.5        # 50% probability per tick
-  base_departure_rate: 0.15     # 15% probability per tick
-  peak_hours: [8, 9, 12, 13, 17]
-
-# Adaptation thresholds
-adaptation:
-  high_occupancy_threshold: 0.90    # Trigger price increase at 90%
-  low_occupancy_threshold: 0.50     # Trigger price decrease at 50%
-  gate_close_queue_threshold: 8     # Close gate when queue >= 8
-  gate_reopen_occupancy: 0.85       # Reopen gate when occupancy < 85%
-  price_increase_step: 1.0          # $1.00 increase
-  price_decrease_step: 0.5          # $0.50 decrease
-```
 
 ---
 
