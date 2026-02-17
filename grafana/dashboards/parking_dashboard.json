@@ -1131,60 +1131,45 @@
       },
       "fieldConfig": {
         "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "custom": {
-            "align": "auto",
-            "cellOptions": {
-              "type": "auto"
-            },
-            "inspect": false
-          },
-          "mappings": [],
+          "mappings": [
+            {
+              "type": "value",
+              "options": {
+                "0": { "index": 0, "text": "CLOSED" },
+                "1": { "index": 1, "text": "OPEN" }
+              }
+            }
+          ],
+          "min": 0,
+          "max": 1,
           "thresholds": {
             "mode": "absolute",
             "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
+              { "color": "red", "value": null },
+              { "color": "green", "value": 1 }
             ]
           }
         },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "confidence"
-            },
-            "properties": [
-              {
-                "id": "unit",
-                "value": "percentunit"
-              }
-            ]
-          }
-        ]
+        "overrides": []
       },
       "gridPos": {
         "h": 8,
         "w": 24,
         "x": 0,
-        "y": 28
+        "y": 27
       },
-      "id": 12,
+      "id": 19,
       "options": {
-        "cellHeight": "sm",
-        "footer": {
-          "countRows": false,
-          "fields": "",
-          "reducer": [
-            "sum"
-          ],
-          "show": false
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": ["lastNotNull"]
         },
-        "showHeader": true
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
       },
       "pluginVersion": "10.0.0",
       "targets": [
@@ -1193,12 +1178,12 @@
             "type": "influxdb",
             "uid": "influxdb"
           },
-          "query": "from(bucket: \"parking_data\")\n  |> range(start: -1h)\n  |> filter(fn: (r) => r._measurement == \"adaptation_decisions\")\n  |> pivot(rowKey:[\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")\n  |> sort(columns: [\"_time\"], desc: true)\n  |> limit(n: 20)",
+          "query": "from(bucket: \"parking_data\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"parking_sensor_data\")\n  |> filter(fn: (r) => r._field == \"gate_state\")\n  |> map(fn: (r) => ({ r with _value: if r._value == \"open\" then 1 else 0 }))\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\n  |> yield(name: \"gate_state\")",
           "refId": "A"
         }
       ],
-      "title": "Recent Adaptation Decisions",
-      "type": "table"
+      "title": "Gate State Over Time (Open=1, Closed=0)",
+      "type": "timeseries"
     }
   ],
   "refresh": "5s",
