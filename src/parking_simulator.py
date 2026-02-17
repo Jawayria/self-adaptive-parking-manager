@@ -175,10 +175,10 @@ class ParkingLotSimulator:
         price_multiplier = max(0.3, 1.5 - (0.5 * price_ratio))
         
         # Capacity factor (near-full lots naturally see fewer arrivals)
-        occupancy_ratio = self.current_occupancy / self.config.total_capacity
-        capacity_multiplier = 1.0 if occupancy_ratio < 0.9 else (1.0 - occupancy_ratio) * 5
+        #occupancy_ratio = self.current_occupancy / self.config.total_capacity
+        #capacity_multiplier = 1.0 if occupancy_ratio < 0.9 else (1.0 - occupancy_ratio) * 5
         
-        return base_rate * traffic_multiplier * price_multiplier * capacity_multiplier
+        return base_rate * traffic_multiplier * price_multiplier # * capacity_multiplier
     
     def _calculate_departure_probability(self) -> float:
         """
