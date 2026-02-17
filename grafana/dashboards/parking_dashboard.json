@@ -1112,19 +1112,6 @@
       "type": "timeseries"
     },
     {
-      "collapsed": false,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 27
-      },
-      "id": 11,
-      "panels": [],
-      "title": "Adaptation Activity",
-      "type": "row"
-    },
-    {
       "datasource": {
         "type": "influxdb",
         "uid": "influxdb"
