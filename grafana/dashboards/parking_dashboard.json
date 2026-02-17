@@ -169,140 +169,75 @@
       "title": "Total Revenue",
       "type": "stat"
     },
+
+    {
+  "datasource": {
+    "type": "influxdb",
+    "uid": "influxdb"
+  },
+  "fieldConfig": {
+    "defaults": {
+      "color": {
+        "mode": "thresholds"
+      },
+      "mappings": [],
+      "thresholds": {
+        "mode": "absolute",
+        "steps": [
+          {
+            "color": "green",
+            "value": null
+          },
+          {
+            "color": "orange",
+            "value": 10
+          },
+          {
+            "color": "red",
+            "value": 25
+          }
+        ]
+      },
+      "unit": "short"
+    },
+    "overrides": []
+  },
+  "gridPos": {
+    "h": 6,
+    "w": 12,
+    "x": 12,
+    "y": 1
+  },
+  "id": 5,
+  "options": {
+    "colorMode": "value",
+    "graphMode": "area",
+    "justifyMode": "auto",
+    "orientation": "auto",
+    "reduceOptions": {
+      "calcs": [
+        "lastNotNull"
+      ],
+      "fields": "",
+      "values": false
+    },
+    "textMode": "auto"
+  },
+  "pluginVersion": "10.0.0",
+  "targets": [
     {
       "datasource": {
         "type": "influxdb",
         "uid": "influxdb"
       },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "yellow",
-                "value": 5
-              },
-              {
-                "color": "red",
-                "value": 10
-              }
-            ]
-          },
-          "unit": "short"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 6,
-        "w": 6,
-        "x": 12,
-        "y": 1
-      },
-      "id": 4,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "textMode": "auto"
-      },
-      "pluginVersion": "10.0.0",
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "influxdb"
-          },
-          "query": "from(bucket: \"parking_data\")\n  |> range(start: -5m)\n  |> filter(fn: (r) => r._measurement == \"system_metrics\")\n  |> filter(fn: (r) => r._field == \"total_queue_length\")\n  |> last()",
-          "refId": "A"
-        }
-      ],
-      "title": "Total Queue Length (Both Lots)",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "influxdb"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "orange",
-                "value": 10
-              },
-              {
-                "color": "red",
-                "value": 25
-              }
-            ]
-          },
-          "unit": "short"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 6,
-        "w": 6,
-        "x": 18,
-        "y": 1
-      },
-      "id": 5,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "textMode": "auto"
-      },
-      "pluginVersion": "10.0.0",
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "influxdb"
-          },
-          "query": "from(bucket: \"parking_data\")\n  |> range(start: -5m)\n  |> filter(fn: (r) => r._measurement == \"system_metrics\")\n  |> filter(fn: (r) => r._field == \"total_rejected\")\n  |> last()",
-          "refId": "A"
-        }
-      ],
-      "title": "Total Rejected Vehicles",
-      "type": "stat"
-    },
+      "query": "from(bucket: \"parking_data\")\n  |> range(start: -5m)\n  |> filter(fn: (r) => r._measurement == \"parking_sensor_data\")\n  |> filter(fn: (r) => r._field == \"rejected_count\")\n  |> difference(nonNegative: true)\n  |> last()",
+      "refId": "A"
+    }
+  ],
+  "title": "Rejected Vehicles (Latest)",
+  "type": "stat"
+}
+,
     {
       "datasource": {
         "type": "influxdb",
@@ -1112,6 +1047,19 @@
       "type": "timeseries"
     },
     {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 27
+      },
+      "id": 11,
+      "panels": [],
+      "title": "Adaptation Activity",
+      "type": "row"
+    },
+    {
       "datasource": {
         "type": "influxdb",
         "uid": "influxdb"
@@ -1172,6 +1120,7 @@
       "title": "Gate State Over Time (Open=1, Closed=0)",
       "type": "timeseries"
     }
+
   ],
   "refresh": "5s",
   "schemaVersion": 38,
