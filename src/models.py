@@ -178,6 +178,50 @@ class ControlCommand:
 
 
 @dataclass
+class AnalysisResult:
+    """Result of the analysis phase"""
+    lot_id: str
+    issues_detected: List[str]
+    severity: str  # "low", "medium", "high", "critical"
+    current_state: Dict[str, Any]
+    recommended_actions: List[AdaptationAction]
+    confidence: float  # 0.0 to 1.0
+    
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert to dictionary"""
+        return {
+            "lot_id": self.lot_id,
+            "issues_detected": self.issues_detected,
+            "severity": self.severity,
+            "current_state": self.current_state,
+            "recommended_actions": [a.value for a in self.recommended_actions],
+            "confidence": self.confidence
+        }
+    
+    def to_json(self) -> str:
+        """Convert to JSON string"""
+        return json.dumps(self.to_dict())
+    
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> 'AnalysisResult':
+        """Create AnalysisResult from dictionary"""
+        return cls(
+            lot_id=data["lot_id"],
+            issues_detected=data["issues_detected"],
+            severity=data["severity"],
+            current_state=data["current_state"],
+            recommended_actions=[AdaptationAction(a) for a in data["recommended_actions"]],
+            confidence=data["confidence"]
+        )
+    
+    @classmethod
+    def from_json(cls, json_str: str) -> 'AnalysisResult':
+        """Create AnalysisResult from JSON string"""
+        data = json.loads(json_str)
+        return cls.from_dict(data)
+
+
+@dataclass
 class AdaptationDecision:
     """Represents a decision made by the autonomic manager"""
     lot_id: str
@@ -199,6 +243,29 @@ class AdaptationDecision:
             "expected_outcome": self.expected_outcome,
             "confidence": self.confidence
         }
+    
+    def to_json(self) -> str:
+        """Convert to JSON string"""
+        return json.dumps(self.to_dict())
+    
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> 'AdaptationDecision':
+        """Create AdaptationDecision from dictionary"""
+        return cls(
+            lot_id=data["lot_id"],
+            timestamp=datetime.fromisoformat(data["timestamp"]) if isinstance(data["timestamp"], str) else data["timestamp"],
+            trigger_condition=data["trigger_condition"],
+            current_state=data["current_state"],
+            actions=[AdaptationAction(a) for a in data["actions"]],
+            expected_outcome=data["expected_outcome"],
+            confidence=data["confidence"]
+        )
+    
+    @classmethod
+    def from_json(cls, json_str: str) -> 'AdaptationDecision':
+        """Create AdaptationDecision from JSON string"""
+        data = json.loads(json_str)
+        return cls.from_dict(data)
 
 
 @dataclass

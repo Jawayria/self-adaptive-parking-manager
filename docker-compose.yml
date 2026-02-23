@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   # MQTT Broker (Mosquitto)
   mqtt-broker:
@@ -53,6 +51,76 @@ services:
       - ./grafana/dashboards:/var/lib/grafana/dashboards
     depends_on:
       - influxdb
+    restart: unless-stopped
+    networks:
+      - parking-network
+
+  # ==========================================================================
+  # MAPE-K Microservices
+  # ==========================================================================
+
+  # Monitor Service - Collects sensor data and calculates system metrics
+  monitor:
+    build:
+      context: .
+      dockerfile: services/monitor/Dockerfile
+    container_name: parking-monitor
+    depends_on:
+      - mqtt-broker
+      - influxdb
+    restart: unless-stopped
+    networks:
+      - parking-network
+
+  # Analyzer Service - Analyzes parking lot state and detects issues
+  analyzer:
+    build:
+      context: .
+      dockerfile: services/analyzer/Dockerfile
+    container_name: parking-analyzer
+    depends_on:
+      - mqtt-broker
+      - monitor
+    restart: unless-stopped
+    networks:
+      - parking-network
+
+  # Planner Service - Creates adaptation decisions with cooldown logic
+  planner:
+    build:
+      context: .
+      dockerfile: services/planner/Dockerfile
+    container_name: parking-planner
+    depends_on:
+      - mqtt-broker
+      - influxdb
+      - analyzer
+    restart: unless-stopped
+    networks:
+      - parking-network
+
+  # Executor Service - Sends control commands to parking lots
+  executor:
+    build:
+      context: .
+      dockerfile: services/executor/Dockerfile
+    container_name: parking-executor
+    depends_on:
+      - mqtt-broker
+      - influxdb
+      - planner
+    restart: unless-stopped
+    networks:
+      - parking-network
+
+  # Simulator Service - Generates parking lot sensor data
+  simulator:
+    build:
+      context: .
+      dockerfile: services/simulator/Dockerfile
+    container_name: parking-simulator
+    depends_on:
+      - mqtt-broker
     restart: unless-stopped
     networks:
       - parking-network

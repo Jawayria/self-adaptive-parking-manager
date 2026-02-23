@@ -16,7 +16,8 @@ from .models import (
     SensorData,
     AdaptationDecision,
     SystemMetrics,
-    ParkingLotConfig
+    ParkingLotConfig,
+    AnalysisResult
 )
 
 logger = logging.getLogger(__name__)
@@ -276,6 +277,38 @@ class KnowledgeBase:
         except Exception as e:
             logger.error(f"Failed to get recent adaptations: {e}", exc_info=True)
             return []
+
+    def store_adaptation_timestamp(self, lot_id: str):
+        """Store the timestamp of an adaptation for cooldown tracking."""
+        try:
+            point = (
+                Point("adaptation_cooldowns")
+                .tag("lot_id", lot_id)
+                .field("adapted", True)
+            )
+            self.write_api.write(bucket=self.bucket, org=self.org, record=point)
+            logger.debug(f"Stored adaptation timestamp for lot {lot_id}")
+        except Exception as e:
+            logger.error(f"Failed to store adaptation timestamp: {e}", exc_info=True)
+
+    def get_last_adaptation_time(self, lot_id: str) -> Optional[datetime]:
+        """Get the timestamp of the last adaptation for a lot."""
+        query = f'''
+        from(bucket: "{self.bucket}")
+            |> range(start: -1h)
+            |> filter(fn: (r) => r._measurement == "adaptation_cooldowns")
+            |> filter(fn: (r) => r.lot_id == "{lot_id}")
+            |> last()
+        '''
+        try:
+            result = self.query_api.query(query, org=self.org)
+            for table in result:
+                for record in table.records:
+                    return record.get_time()
+            return None
+        except Exception as e:
+            logger.error(f"Failed to get last adaptation time: {e}", exc_info=True)
+            return None
 
     def close(self):
         """Close the InfluxDB connection."""

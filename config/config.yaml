@@ -1,17 +1,22 @@
 # Self-Adaptive Smart Parking Lot Manager Configuration
+# Docker Environment - uses container hostnames
 
 # MQTT Configuration
 mqtt:
-  broker: "localhost"
+  broker: "mqtt-broker"
   port: 1883
   topics:
     sensor_data: "parking/lot/{lot_id}/sensors"
     control_commands: "parking/lot/{lot_id}/control"
     status: "parking/lot/{lot_id}/status"
+    # MAPE-K inter-service communication topics
+    mape_sensor_data: "mape/sensor_data/{lot_id}"
+    mape_analysis: "mape/analysis/{lot_id}"
+    mape_decision: "mape/decision/{lot_id}"
 
 # InfluxDB Configuration
 influxdb:
-  url: "http://localhost:8086"
+  url: "http://influxdb:8086"
   token: "my-super-secret-token"
   org: "parking-org"
   bucket: "parking_data"
@@ -47,21 +52,21 @@ adaptation:
   # Target utilization range
   target_utilization_min: 0.70  # 70%
   target_utilization_max: 0.95  # 95%
-  
+
   # Price adjustment thresholds
   high_occupancy_threshold: 0.80   # Increase price above 80%
   low_occupancy_threshold: 0.50     # Decrease price below 50%
   critical_occupancy_threshold: 0.98 # Critical level
-  
+
   # Queue management
   max_queue_length: 10
   queue_warning_threshold: 5
-  
+
   # Price adjustment amounts
   price_increase_step: 1.0
   price_decrease_step: 0.5
   critical_price_multiplier: 1.5
-  
+
   # Gate control
   gate_close_occupancy_threshold: 0.80
   gate_reopen_occupancy: 0.70

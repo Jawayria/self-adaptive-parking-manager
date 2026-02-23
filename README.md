@@ -37,52 +37,14 @@ The system manages **2 parking lots** (Lot 1: 100 spaces, Lot 2: 50 spaces) usin
 ### 1. Start Infrastructure
 
 ```bash
-docker-compose up -d
+docker-compose up -d --build
 ```
 Verify all services are running: 
 ```bash
 docker ps
 ```
 
-### 2. Install Python Dependencies (Recommended)
-
-```bash
-python -m venv .venv
-```
-Activate the env (In Windows):
-```bash
-.venv\Scripts\activate
-```
-(In Linux/Mac):
-```bash
-source .venv/bin/activate
-```
-
-Install dependencies
-```bash
-pip install -r requirements.txt
-```
-
-### 3. Run the System
-
-```bash
-python main.py
-```
-
-Expected output:
-```
-============================================================
-Self-Adaptive Smart Parking Lot Manager
-============================================================
-INFO - MQTT Client connected
-INFO - InfluxDB connected  
-INFO - Starting parking simulators...
-INFO - Starting autonomic manager...
-INFO - MAPE-K [lot_1]: Analysis detected HIGH_OCCUPANCY
-INFO - Executed increase_price for lot_1
-```
-
-### 4. Access Dashboard
+### 2. Access Dashboard
 
 | Service | URL | Credentials |
 |---------|-----|-------------|
@@ -96,7 +58,7 @@ INFO - Executed increase_price for lot_1
 4. Set time range to **"Last 5 minutes"** for live data
 
 
-### 5. Stopping the System
+### 3. Stopping the System
 
 ```bash
 Ctrl+C
@@ -108,22 +70,42 @@ docker-compose down -v
 ## Project Structure
 
 ```
-Autonomous_project/
+self-adaptive-parking-manager/
 ├── config/
-│   └── config.yaml              
+│   └── config.yaml              # Application configuration
+├── services/
+│   ├── monitor/
+│   │   ├── Dockerfile
+│   │   ├── requirements.txt
+│   │   └── main.py              # Monitor service
+│   ├── analyzer/
+│   │   ├── Dockerfile
+│   │   ├── requirements.txt
+│   │   └── main.py              # Analyzer service
+│   ├── planner/
+│   │   ├── Dockerfile
+│   │   ├── requirements.txt
+│   │   └── main.py              # Planner service
+│   ├── executor/
+│   │   ├── Dockerfile
+│   │   ├── requirements.txt
+│   │   └── main.py              # Executor service
+│   └── simulator/
+│       ├── Dockerfile
+│       ├── requirements.txt
+│       └── main.py              # Simulator service
 ├── src/
-│   ├── models.py                
-│   ├── mqtt_client.py           
-│   ├── knowledge_base.py        
-│   ├── parking_simulator.py     
-│   └── autonomic_manager.py     
+│   ├── models.py                # Shared data models
+│   ├── mqtt_client.py           # MQTT client wrapper
+│   ├── knowledge_base.py        # InfluxDB interface
+│   └── parking_simulator.py     # Parking lot simulation
 ├── grafana/
 │   ├── provisioning/            
 │   └── dashboards/
 │       └── parking_dashboard.json  
 ├── docker-compose.yml           
-├── requirements.txt             
-├── main.py                      
+├── Project_report.pdf             
+├── .gitignore                      
 └── README.md                    
 ```
 
@@ -141,8 +123,11 @@ Edit [config/config.yaml](config/config.yaml) to customize parameters.
 
 | Component | Technology | Purpose |
 |-----------|------------|---------|
-| Autonomic Manager | Python | MAPE-K control loop implementation |
-| Message Broker | MQTT (Mosquitto) | Asynchronous communication |
+| Monitor Service | Python (Docker) | Collects sensor data, calculates metrics |
+| Analyzer Service | Python (Docker) | Analyzes state, detects issues |
+| Planner Service | Python (Docker) | Creates adaptation decisions |
+| Executor Service | Python (Docker) | Sends control commands |
+| Message Broker | MQTT (Mosquitto) | Asynchronous inter-service communication |
 | Knowledge Base | InfluxDB | Time-series data storage |
 | Dashboard | Grafana | Real-time visualization |
 | Parking Simulator | Python | Simulates parking lot behavior |
