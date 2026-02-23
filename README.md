@@ -121,16 +121,16 @@ Edit [config/config.yaml](config/config.yaml) to customize parameters.
 
 ## Technology Stack
 
-| Component | Technology | Purpose |
-|-----------|------------|---------|
-| Monitor Service | Python (Docker) | Collects sensor data, calculates metrics |
-| Analyzer Service | Python (Docker) | Analyzes state, detects issues |
-| Planner Service | Python (Docker) | Creates adaptation decisions |
-| Executor Service | Python (Docker) | Sends control commands |
-| Message Broker | MQTT (Mosquitto) | Asynchronous inter-service communication |
-| Knowledge Base | InfluxDB | Time-series data storage |
-| Dashboard | Grafana | Real-time visualization |
-| Parking Simulator | Python | Simulates parking lot behavior |
+| Component         | Technology | Purpose                                  |
+|-------------------|------------|------------------------------------------|
+| Monitor Service   | Python (Docker) | Collects sensor data, calculates metrics |
+| Analyzer Service  | Python (Docker) | Analyzes state, detects issues           |
+| Planner Service   | Python (Docker) | Creates adaptation decisions             |
+| Executor Service  | Python (Docker) | Sends control commands                   |
+| Simulator Service | Python (Docker) | Simulates parking lot behavior           |
+| Message Broker    | MQTT (Mosquitto) | Asynchronous inter-service communication |
+| Knowledge Base    | InfluxDB | Time-series data storage                 |
+| Dashboard         | Grafana | Real-time visualization                  |
 
 ---
 
